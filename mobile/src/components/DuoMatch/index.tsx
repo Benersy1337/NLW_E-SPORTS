@@ -1,0 +1,89 @@
+import { useState } from 'react';
+import { View, Modal, ModalProps, Text, TouchableOpacity, Alert, ActivityIndicator  } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { CheckCircle } from 'phosphor-react-native';
+import * as ClipBoard from 'expo-clipboard';
+
+import { styles } from './styles';
+import { THEME } from '../../theme';
+import { Heading } from '../Heading';
+
+interface Props extends ModalProps{
+    discord: string;
+    onClose: () => void;
+}
+
+export function DuoMatch({discord, onClose, ...rest}: Props) {
+
+    // Se mudarmos o estado para true, podemos observar o loading na modal do butao conectar nos cards
+  const [isCopping, SetIsCopping] = useState(false);  
+
+  async function handleCopyDiscordUserToClipboard(){
+    SetIsCopping(true);
+    await ClipBoard.setStringAsync(discord);
+
+    Alert.alert('Discord Copiado!', 'Cole no seu discord e adicione este usuário para começar a jogar!')
+    SetIsCopping(false);
+  } 
+  
+  
+  return (
+    <Modal
+    animationType="fade"
+        transparent
+        statusBarTranslucent
+        {...rest}
+    >
+        <View style={styles.container}>
+
+            <View style={styles.content}>
+
+                <TouchableOpacity
+                    style={styles.closeIcon}
+                    onPress={onClose}
+                >
+                    <MaterialIcons
+                        name="close"
+                        size={20}
+                        color={THEME.COLORS.CAPTION_500}
+                    />
+                </TouchableOpacity>
+
+                <CheckCircle
+                    size={64}
+                    color={THEME.COLORS.SUCCESS}
+                    weight="bold"
+                />
+
+                <Heading
+                    title="Let's Play"
+                    subtitle=''
+                    style = {{ alignItems: 'center', marginTop: 24 }}
+                />
+
+                <Text style={styles.label}>
+                    Adicione no Discord
+                </Text>
+
+                <TouchableOpacity
+                    style={styles.discordButton}
+                    onPress={handleCopyDiscordUserToClipboard}
+                    disabled={isCopping}
+                >
+
+                    <Text style={styles.discord}>
+
+                        {/* Lógica de Usabilidade, caso o celular do usuário demore para carregar a modal aparecendo o discord do usuário quando clicar no botao de conectar */}
+                        {isCopping ? <ActivityIndicator color={THEME.COLORS.PRIMARY} /> : discord}
+
+                    </Text>
+
+                </TouchableOpacity>
+                
+
+            </View>
+
+        </View>
+    </Modal>
+  );
+}
