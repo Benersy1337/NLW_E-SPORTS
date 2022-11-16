@@ -2,7 +2,7 @@
 
 <h3>Comandos do Projeto</h3>
 
-<h4><b>npm init -y</b></h4>
+<h4>npm init -y</h4>
 
 ![image](https://user-images.githubusercontent.com/83971541/194730244-a2953c99-5fc7-4663-b950-051930991e6b.png)
 
